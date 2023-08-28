@@ -43,10 +43,9 @@ services:
             - internal
             - nginx_network
         environment:
-            PGPASSWORD: '${DB_PASSWORD:-password}'
-            POSTGRES_DB: '${DB_DATABASE:-db}'
-            POSTGRES_USER: '${DB_USERNAME:-db_user}'
-            POSTGRES_PASSWORD: '${DB_PASSWORD:-password}'
+            POSTGRES_DB: market_db
+            POSTGRES_USER: market_user
+            POSTGRES_PASSWORD: market_password
         volumes:
             - .:/app
         ports:
