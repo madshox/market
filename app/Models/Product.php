@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -12,11 +13,13 @@ class Product extends Model
 
     protected $guarded = ['id'];
 
+    protected $table = 'products';
+
     protected $casts = [
         'name' => 'array',
         'category_id' => 'integer',
         'price' => 'float',
-        'picture' => 'string',
+        'image' => 'string',
         'description' => 'array',
         'in_stock' => 'boolean',
     ];
@@ -25,4 +28,9 @@ class Product extends Model
         'updated_at',
         'deleted_at'
     ];
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

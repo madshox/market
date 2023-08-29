@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
@@ -15,5 +16,25 @@ use App\Http\Controllers\Api\CategoryController;
 |
 */
 
-Route::apiResource('products', ProductController::class);
-Route::apiResource('categories', CategoryController::class);
+Route::prefix('dashboard')->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::middleware('auth:api')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+
+        Route::prefix('products')->group(function () {
+            Route::post('findAll', [ProductController::class, 'index']);
+            Route::post('findOne', [ProductController::class, 'show']);
+            Route::post('create', [ProductController::class, 'store']);
+            Route::post('update', [ProductController::class, 'update']);
+            Route::post('remove', [ProductController::class, 'destroy']);
+        });
+
+        Route::prefix('categories')->group(function () {
+            Route::post('findAll', [CategoryController::class, 'index']);
+            Route::post('findOne', [CategoryController::class, 'show']);
+            Route::post('create', [CategoryController::class, 'store']);
+            Route::post('update', [CategoryController::class, 'update']);
+            Route::post('remove', [CategoryController::class, 'destroy']);
+        });
+    });
+});
