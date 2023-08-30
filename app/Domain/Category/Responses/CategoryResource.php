@@ -20,8 +20,7 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name[$locale],
             'parent' => new CategoryResource($this->parent),
-//            'children' => CategoryResource::collection($this->children),
-            'icon' => $this->icon,
+            'icon' => $this->icon ? env('APP_URL') . '/uploads/' . $this->icon : null,
         ];
     }
 }
