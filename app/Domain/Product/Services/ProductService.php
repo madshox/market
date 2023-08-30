@@ -28,12 +28,19 @@ class ProductService
 
     public function getQuery($request = null)
     {
-        $category_id = $request->category_id??null;
-        return Product::query()
+        $category_id = $request->category_id ?? null;
+        $products = Product::query()
             ->when($category_id, function ($query) use ($category_id) {
                 return $query->where('category_id', $category_id);
-            })
-            ->orderBy('id', 'desc');
+            });
+
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $products->whereRaw("LOWER(name->>'ru') LIKE LOWER(?)", ["%{$search}%"])
+                ->orWhereRaw("LOWER(name->>'en') LIKE LOWER(?)", ["%{$search}%"]);
+        }
+
+        return $products->orderBy('id', 'desc');
     }
 
     public function set(Model $model)

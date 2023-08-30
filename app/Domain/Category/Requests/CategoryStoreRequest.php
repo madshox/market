@@ -25,13 +25,13 @@ class CategoryStoreRequest extends FormRequest
         $parentId = (int) $this->post('parent_id');
         $locales = config('app.locales');
         return [
-            'name' => 'required|array|' . 'required_array_keys:' . implode(',', $locales),
-            'icon' => 'sometimes|max:2048',
             'parent_id' => [
                 'sometimes',
                 'exists:categories,id',
                 new MaxSubcategories(10, $parentId),
             ],
+            'name' => 'required|array|' . 'required_array_keys:' . implode(',', $locales),
+            'icon' => 'sometimes|max:2048',
         ];
     }
 

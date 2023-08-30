@@ -75,7 +75,7 @@ class ProductController extends BaseController
             ]);
             $item = $this->service->setById($request->post('id'))->get();
             if ($this->authorize('update', $item)) {
-                $credentials['in_stock'] = $request->in_stock;
+                $credentials['in_stock'] = $request->in_stock??true;
             }
             if ($request->hasFile('image')) {
                 if ($item->image) {

@@ -2,8 +2,9 @@
 
 namespace Domain\Category\Requests;
 
-use App\Rules\MaxSubcategories;
+use App\Rules\NotSelfParent;
 use Illuminate\Http\Response;
+use App\Rules\MaxSubcategories;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
@@ -32,6 +33,7 @@ class CategoryUpdateRequest extends FormRequest
             'parent_id' => [
                 'sometimes',
                 'exists:categories,id',
+                new NotSelfParent($categoryId, $parentId),
                 new MaxSubcategories(10, $parentId, $categoryId),
             ],
         ];
