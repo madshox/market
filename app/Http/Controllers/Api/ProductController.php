@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\FindOneRequest;
 use App\Http\Requests\FindAllRequest;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Domain\Product\Services\ProductService;
 use Domain\Product\Responses\ProductResource;
@@ -42,7 +44,15 @@ class ProductController extends BaseController
     public function store(ProductStoreRequest $request)
     {
         try {
-            $credentials = $request->all();
+            $credentials = $request->only([
+                'category_id',
+                'name',
+                'price',
+                'description',
+            ]);
+            if ($this->authorize('create', Product::class)) {
+                $credentials['in_stock'] = $request->in_stock;
+            }
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('products', 'uploads');
                 $credentials['image'] = $imagePath;
@@ -57,8 +67,16 @@ class ProductController extends BaseController
     public function update(ProductUpdateRequest $request)
     {
         try {
-            $credentials = $request->all();
+            $credentials = $request->only([
+                'category_id',
+                'name',
+                'price',
+                'description',
+            ]);
             $item = $this->service->setById($request->post('id'))->get();
+            if ($this->authorize('update', $item)) {
+                $credentials['in_stock'] = $request->in_stock;
+            }
             if ($request->hasFile('image')) {
                 if ($item->image) {
                     Storage::disk('uploads')->delete($item->image);

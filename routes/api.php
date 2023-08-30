@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\BasketController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
@@ -35,6 +36,11 @@ Route::prefix('dashboard')->group(function () {
             Route::post('create', [CategoryController::class, 'store']);
             Route::post('update', [CategoryController::class, 'update']);
             Route::post('remove', [CategoryController::class, 'destroy']);
+        });
+
+        Route::prefix('basket')->group(function () {
+            Route::post('/add', [BasketController::class, 'addProduct']);
+            Route::post('/remove', [BasketController::class, 'removeProduct']);
         });
     });
 });
